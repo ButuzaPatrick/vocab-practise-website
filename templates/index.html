@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Practice</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div id="bucket">
+        <div id="random-word">
+            <div class="english-word" id="englishWord"></div>
+        </div>
+        <div id="german-input">
+            <input type="text" id="germanInput" placeholder="translation with article">
+            <button id="check-answer" onclick="checkAnswer()">check</button>
+        </div>
+        <div id="correct-answer">
+            <button id="reveal-answer" onclick="revealAnswer()">i'm cooked</button>
+        </div>
+    </div>
+
+    <script>
+        let currentGerman = "";
+        const inputBox = document.getElementById("germanInput");
+
+        // Fetch a random word from Flask
+        async function loadWord() {
+            document.getElementById("reveal-answer").textContent = "i'm cooked";
+            const response = await fetch("/word");
+            const data = await response.json();
+            document.getElementById("englishWord").textContent = data.ENGLISH_TRANSLATION;
+            currentGerman = data.GERMAN_NOUN;
+            console.log(currentGerman); // PRINTING OUT THE GERMAN WORD
+        }
+
+        async function revealAnswer() {
+            document.getElementById("reveal-answer").textContent = "the word is: " + currentGerman;
+        }
+
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Enter" && !e.repeat) {
+                const value = inputBox.value.trim();
+                if (value === "") {
+                    inputBox.value = "";
+                    loadWord();
+                    return;
+                } else {
+                    console.log(value);
+                    checkAnswer();
+                }
+            }
+        });
+
+        function checkAnswer() {
+            const input = inputBox.value.trim();
+
+            if (input.toLowerCase() === currentGerman.toLowerCase()) {
+                inputBox.className = "correct";
+                setTimeout(() => {
+                    inputBox.value = "";
+                    document.getElementById("reveal-answer").textContent = "i'm cooked";
+                    loadWord();
+                    inputBox.className = "";
+                }, 1500);
+            } else {
+                // inputBox.className = "wrong";
+                inputBox.className = "wrong";
+                // Remove the class after animation so it can be reapplied later
+                setTimeout(() => {
+                    inputBox.className = "";
+                }, 300);
+            }
+        }
+
+        // Load first word on page load
+        loadWord();
+    </script>
+</body>
+</html>

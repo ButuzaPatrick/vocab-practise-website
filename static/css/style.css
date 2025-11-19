@@ -1,0 +1,130 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #dbdbdb;
+}
+
+#bucket {
+    text-align: center;
+    background-color: none;
+    padding: 60px;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#random-word {
+    background-color: none;
+    height: 100px;
+    width: 60%;
+    padding: 60px;
+    margin: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#german-input {
+    width: 50%;
+    display: flex;
+    justify-content: center; /* horizontally center */
+    align-items: center;     /* vertically center */
+    gap: 1rem;  
+}
+
+.english-word {
+    font-size: 60px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-family: "Georgia", "Times New Roman", serif;
+}
+
+input[type="text"] {
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.06);
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(4px);
+    font-size: 1rem;
+    outline: none;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.08) inset;
+    font-family: "Georgia", "Times New Roman", serif;
+    transition: background-color 0.2s ease;
+}
+
+input[type="text"]:focus {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    /* border-color: rgba(0,0,0,0.16); */
+}
+
+input[type="text"].correct {
+    background-color: rgb(128, 221, 128);
+}
+
+input[type="text"].wrong {
+    background-color: rgb(238, 68, 68);
+    animation: shake 0.15s ease;
+}
+
+@keyframes shake {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-10px); }
+  50%  { transform: translateX(10px); }
+  75%  { transform: translateX(-10px); }
+  100% { transform: translateX(0); }
+}
+
+#check-answer {
+    padding: 0.7rem 1.4rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.06);
+    background: rgba(22, 22, 22, 0.95);
+    backdrop-filter: blur(4px);
+    font-size: 1rem;
+    font-family: "Georgia", "Times New Roman", serif;
+    cursor: pointer;
+    transition: 
+        background-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.15s ease;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.08) inset;
+    color: rgb(226, 226, 226);
+}
+
+/* Hover effect */
+#check-answer:hover {
+    background: rgba(22, 22, 22, 0.95);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    color: rgb(226, 226, 226);
+}
+
+/* Active press */
+#check-answer:active {
+    transform: scale(0.97);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+#correct-answer {
+    color: white;
+}
+
+#reveal-answer {
+    background-color: transparent;
+    border: none;
+    font-family: "Georgia", "Times New Roman", serif;
+    color: rgb(128, 128, 128);
+    text-decoration: underline;
+    margin: 20px;
+    font-size: 0.9rem;
+    transition: color 0.1s ease;
+}
+
+#reveal-answer:hover {
+    color: rgb(71, 71, 71);
+    cursor: pointer;
+}
