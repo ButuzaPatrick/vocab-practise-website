@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 import random
 import csv
+import re
 
 app = Flask(__name__)
 
@@ -15,6 +16,8 @@ def get_word():
         rows = list(reader)
     
     random_row = random.choice(rows)
+    cleaned_translation = re.sub(r"\([^)]*\)", "", random_row["ENGLISH_TRANSLATION"]).strip()
+    random_row["ENGLISH_TRANSLATION"] = cleaned_translation
     return random_row
 
 if __name__ == "__main__":

@@ -20,13 +20,19 @@ body {
 
 #random-word {
     background-color: none;
-    height: 100px;
+    height: 200px;
     width: 60%;
-    padding: 60px;
-    margin: 50px;
+    margin-bottom: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#random-word-button {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
 }
 
 #german-input {
@@ -127,4 +133,21 @@ input[type="text"].wrong {
 #reveal-answer:hover {
     color: rgb(71, 71, 71);
     cursor: pointer;
+}
+
+#hint-bucket {
+    width: 100%;
+    height: 50px;
+    margin-bottom: 30px;
+    background-color: transparent;
+}
+
+#hint {
+    background-color: transparent;
+    border: none;
+    font-family: "Georgia", "Times New Roman", serif;
+    color: rgb(128, 128, 128);
+    margin: 20px;
+    font-size: 0.9rem;
+    transition: color 0.1s ease;
 }
