@@ -7,32 +7,49 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div id="bucket">
-        <div id="hint-bucket">
-            <p id="hint"></p>
-        </div>
-        <div id="random-word">
-            <button id="random-word-button" onclick="loadWord()">
-                <div class="english-word" id="englishWord"></div>
-            </button>
-            
-        </div>
-        <div id="german-input">
-            <input type="text" id="germanInput" placeholder="translation with article">
-            <button id="check-answer" onclick="checkAnswer()">check</button>
-        </div>
-        <div id="correct-answer">
-            <button id="reveal-answer" onclick="revealAnswer()">i'm cooked</button>
+    <div id="loading-bar">
+        <div id="fill"></div>
+    </div>
+    <div id="big-bucket">
+        <div id="bucket">
+            <div id="session-info">
+                <p id="streak"></p>
+                <p id="totals"></p>
+            </div>
+            <div id="hint-bucket">
+                <p id="hint"></p>
+            </div>
+            <div id="random-word">
+                <button id="random-word-button" onclick="loadWord()">
+                    <div class="english-word" id="englishWord"></div>
+                </button>
+                
+            </div>
+            <div id="german-input">
+                <input type="text" id="germanInput" placeholder="translation with article">
+                <button id="check-answer" onclick="checkAnswer()">check</button>
+            </div>
+            <div id="correct-answer">
+                <button id="reveal-answer" onclick="revealAnswer()">i'm cooked</button>
+            </div>
         </div>
     </div>
+
 
     <script>
         let currentGerman = "";
         const inputBox = document.getElementById("germanInput");
+        let max_streak = 0;
+        let current_streak = 0;
+        let total_answered = 0;
+        let correctly_answered = 0;
 
         // Fetch a random word from Flask
         async function loadWord() {
+            total_answered += 1;
             document.getElementById("hint").textContent = "";
+            document.getElementById("totals").textContent = correctly_answered + " / " + total_answered;
+
             document.getElementById("reveal-answer").textContent = "i'm cooked";
             const response = await fetch("/word");
             const data = await response.json();
@@ -64,7 +81,25 @@
             const input = inputBox.value.trim();
 
             if (normalize(input.toLowerCase()) === normalize(currentGerman.toLowerCase())) {
+
+                current_streak += 1;
+
+                if (current_streak > max_streak) {
+                    max_streak = current_streak;
+                }
+
+                if (max_streak > 0) {
+                    document.getElementById("streak").textContent = max_streak + '🔥';
+                }
+
+                if (max_streak > 0) {
+                    correctly_answered += 1;
+                }
+
+                document.getElementById("totals").textContent = correctly_answered + " / " + total_answered;
+
                 inputBox.className = "correct";
+                fillLoadingBar(1.5);
                 setTimeout(() => {
                     inputBox.value = "";
                     document.getElementById("reveal-answer").value = "i'm cooked";
@@ -73,15 +108,42 @@
                     inputBox.className = "";
                 }, 1500);
             } else {
-                // inputBox.className = "wrong";
+
                 document.getElementById("hint").textContent = "the first letter is: " + hint;
                 inputBox.className = "wrong";
-                // Remove the class after animation so it can be reapplied later
+
+                max_streak = 0;
+                current_streak = 0;
+
+                document.getElementById("streak").textContent = "";
+
+
                 setTimeout(() => {
                     inputBox.className = "";
                 }, 300);
             }
         }
+
+        function fillLoadingBar(seconds) {
+            const fill = document.getElementById('loading-bar');
+
+            // Reset instantly
+            fill.style.transition = 'none';
+            fill.style.width = '0';
+
+            // Force browser to register the reset
+            requestAnimationFrame(() => {
+                fill.style.transition = `width ${seconds}s cubic-bezier(0.42, 0, 0.58, 1`;
+                fill.style.width = '100%';
+            });
+
+            fill.addEventListener('transitionend', function reset() {
+                fill.style.transition = 'none';
+                fill.style.width = '0';
+                fill.removeEventListener('transitionend', reset); // remove listener to avoid multiple calls
+            });
+        }
+
 
         const normalize = str =>
             str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
